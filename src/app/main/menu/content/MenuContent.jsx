@@ -8,22 +8,29 @@ import DroppableContainer from 'app/shared-components/drag-and-drop/DroppableCon
 
 const initialItems = [
 	{
-		id: '1',
-		content: 'First item',
-		children: [
-			{ id: '1-1', content: 'Child item 1', children: [] },
-			{ id: '1-2', content: 'Child item 2', children: [] }
+		id: 'q101',
+		name: 'Category 1',
+		items: [
+			{ id: 'abc', name: 'First' },
+			{ id: 'def', name: 'Second' }
 		]
 	},
 	{
-		id: '2',
-		content: 'Second item',
-		children: []
-	},
-	{
-		id: '3',
-		content: 'Third item',
-		children: []
+		id: 'wkqx',
+		name: 'Category 2',
+		items: [
+			{ id: 'ghi', name: 'Third' },
+			{ id: 'jkl', name: 'Fourth' },
+			{
+				id: 'jfl',
+				name: 'kink',
+				items: [
+					{ id: 'ghi1', name: 'Fifet' },
+					{ id: 'jkl2', name: 'Sixs' },
+					{ id: 'jfl3', name: 'Seven' }
+				]
+			}
+		]
 	}
 ];
 
@@ -31,10 +38,9 @@ const initialItems = [
  * Function to change the order of elements.
  */
 
-const reorder = (list, startIndex, endIndex) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
+const reorder = (list, source, destination) => {
+	console.log(source, destination);
+	const result = Array.from(list); /** make copy of state */
 	return result;
 };
 
@@ -43,35 +49,63 @@ const reorder = (list, startIndex, endIndex) => {
  */
 
 const updateNestedList = (list, source, destination) => {
-	/**
-	 * I need add update logic here.
-	 */
-	return list;
+	console.log(list, source, destination);
+
+	// const sourceClone = Array.from(list);
+	// const destClone = Array.from(list);
+	// const [removed] = sourceClone.splice(source.index, 1);
+	// destClone.splice(destination.index, 0, removed);
+	// return destClone;
+};
+
+/**
+ * rename element
+ */
+const renameElement = (e, item) => {
+	e.stopPropagation();
+	console.log('renameElement', item);
+};
+
+/**
+ * add element
+ */
+const addElement = (e, item) => {
+	e.stopPropagation();
+	console.log('addElement', item);
+};
+/**
+ * delete element
+ */
+const deleteElement = (e, item) => {
+	e.stopPropagation();
+	console.log('deleteElement', item);
 };
 
 function MenuContent() {
 	const [state, setState] = useState(initialItems);
 
 	const onDragEnd = (result) => {
-		console.log(result);
 		const { source, destination } = result;
 
-		if (!result.destination) return;
+		if (!destination) return;
 
 		if (source.droppableId === destination.droppableId) {
-			const items = reorder(state, source.index, destination.index);
+			const items = reorder(state, source, destination);
 			setState(items);
 		} else {
-			const updatedState = updateNestedList(state, source, destination);
-			setState(updatedState);
+			// const updatedState = updateNestedList(state, source, destination);
+			// console.log(updatedState);
+			// setState(updatedState);
 		}
 	};
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
 			<DroppableContainer
+				type="droppable-item"
 				droppableId="root"
 				items={state}
+				callback={{ renameElement, addElement, deleteElement }}
 			/>
 		</DragDropContext>
 	);

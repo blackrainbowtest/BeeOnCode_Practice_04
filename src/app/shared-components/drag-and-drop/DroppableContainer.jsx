@@ -7,9 +7,8 @@ import NestedDraggable from './NestedDraggable';
  */
 
 const DroppableWrapper = styled.div`
-	background-color: #f8f8f8;
-	padding: 8px;
-	min-height: 100px;
+	background-color: none;
+	margin-left: 25px;
 `;
 
 /**
@@ -17,9 +16,12 @@ const DroppableWrapper = styled.div`
  * Renders each element as Nested Draggable.
  */
 
-function DroppableContainer({ droppableId, items }) {
+function DroppableContainer({ type, droppableId, items, callback }) {
 	return (
-		<Droppable droppableId={droppableId}>
+		<Droppable
+			droppableId={droppableId}
+			type={type}
+		>
 			{(provided) => (
 				<DroppableWrapper
 					{...provided.droppableProps}
@@ -30,6 +32,7 @@ function DroppableContainer({ droppableId, items }) {
 							key={item.id}
 							item={item}
 							index={index}
+							callback={callback}
 						/>
 					))}
 					{provided.placeholder}
