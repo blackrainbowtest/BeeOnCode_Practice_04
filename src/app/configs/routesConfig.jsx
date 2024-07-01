@@ -7,8 +7,9 @@ import SignUpConfig from '../main/sign-up/SignUpConfig';
 import SignOutConfig from '../main/sign-out/SignOutConfig';
 import Error404Page from '../main/404/Error404Page';
 import ExampleConfig from '../main/example/ExampleConfig';
+import MenuConfig from '../main/menu/MenuConfig';
 
-const routeConfigs = [ExampleConfig, SignOutConfig, SignInConfig, SignUpConfig];
+const routeConfigs = [ExampleConfig, MenuConfig, SignOutConfig, SignInConfig, SignUpConfig];
 /**
  * The routes of the application.
  */

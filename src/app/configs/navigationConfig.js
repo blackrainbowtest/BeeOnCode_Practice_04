@@ -11,6 +11,14 @@ i18next.addResourceBundle('ar', 'navigation', ar);
  */
 const navigationConfig = [
 	{
+		id: 'menu-component',
+		title: 'Menu',
+		translate: 'MENU',
+		type: 'item',
+		icon: 'heroicons-outline:menu',
+		url: 'menu'
+	},
+	{
 		id: 'example-component',
 		title: 'Example',
 		translate: 'EXAMPLE',
