@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 /**
@@ -6,6 +7,7 @@ import styled from 'styled-components';
  */
 
 const ItemIcon = styled.div`
+	position: relative;
 	min-width: 34px;
 	display: flex;
 	justify-content: center;
@@ -20,7 +22,27 @@ const ItemIcon = styled.div`
 	}
 `;
 
-function DnDIconShow({ isOpen, callback }) {
+const ItemChildCount = styled.div`
+	position: absolute;
+	background-color: #6457bb;
+	border-radius: 50%;
+	top: -2px;
+	left: 0px;
+	width: 17px;
+	height: 17px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 11px;
+	letter-spacing: 0;
+
+	&.active {
+		background-color: #de1f5f;
+	}
+`;
+
+function DnDIconShow({ isOpen, callback, childCount, item }) {
+	const menuState = useSelector((state) => state.DnDSlice);
 	return (
 		<ItemIcon
 			onClick={(e) => {
@@ -28,6 +50,9 @@ function DnDIconShow({ isOpen, callback }) {
 				callback((prev) => !prev);
 			}}
 		>
+			<ItemChildCount className={menuState?.currentItem?.id === item.id ? 'active' : ''}>
+				{childCount}
+			</ItemChildCount>
 			{!isOpen ? (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
