@@ -124,10 +124,8 @@ export const ParentDraggable = memo(function ParentDraggable({ item }) {
 			e.stopPropagation();
 			e.preventDefault();
 
-			console.log(555);
-
 			if (isAtCenter) {
-				moveItemAsChild(menuState.data, menuState.currentItem, menuState.draggedItem);
+				dispatch(updateData(moveItemAsChild(menuState.data, menuState.currentItem, menuState.draggedItem)));
 				setIsAtCenter(false);
 			}
 

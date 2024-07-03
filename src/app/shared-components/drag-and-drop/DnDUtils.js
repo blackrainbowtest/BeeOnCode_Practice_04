@@ -219,13 +219,12 @@ export function isUpperHalf(elementRect, cursorPositionY) {
  * @returns {Array} - The updated array of data items.
  */
 export function moveItemAsChild(data, currentItem, draggedItem) {
-	console.log(data, currentItem, draggedItem);
-	// return data.map((item) => {
+	const orderId = data.filter((menu) => menu.parent === draggedItem.id).length + 1;
+	return data.map((menu) => {
+		if (menu.id === currentItem.id) {
+			return { ...menu, order: orderId, parent: draggedItem.id };
+		}
 
-		// if (item.id === draggedItem.id) {
-		// 	return { ...item, parent: targetItem.id };
-		// }
-
-		// return item;
-	// });
+		return menu;
+	});
 }
