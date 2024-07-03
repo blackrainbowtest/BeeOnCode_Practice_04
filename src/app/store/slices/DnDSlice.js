@@ -92,7 +92,6 @@ const initialState = {
 	currentItem: null,
 	draggedItem: null,
 	isChildShow: false,
-	modifiedData: []
 };
 
 const DnDSlice = createSlice({
@@ -114,10 +113,6 @@ const DnDSlice = createSlice({
 		updateData: (state, action) => {
 			state.data = action.payload;
 		},
-		updateModifiedData: (state, action) => {
-			state.modifiedData = action.payload;
-		},
-
 		addNewData: (state, action) => {
 			state.data = [...state.data, action.payload];
 		},
@@ -136,7 +131,6 @@ export const {
 	changeDraggedItem,
 	changeIsChildShow,
 	updateData,
-	updateModifiedData,
 	addNewData,
 	deleteData,
 	renameData

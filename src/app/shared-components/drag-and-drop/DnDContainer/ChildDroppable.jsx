@@ -13,7 +13,6 @@ const ChildsContainer = styled.div`
 
 export const ChildDroppable = memo(function ChildDroppable({ parent }) {
 	const menuState = useSelector((state) => state.DnDSlice);
-	console.log(menuState);
 	return (
 		<ChildsContainer onDragOver={(e) => e.stopPropagation()}>
 			{menuState.data

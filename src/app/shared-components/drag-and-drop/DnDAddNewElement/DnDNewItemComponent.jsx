@@ -1,5 +1,5 @@
 import { AnimatedContainerLeft } from 'app/shared-components/animated-components/AnimatedContainerLeft';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
@@ -56,6 +56,7 @@ const NewItemInput = styled.input`
 
 const NewItemSave = styled.button`
 	border: 1px solid #6457bb;
+	background-color: #6457bb;
 	border-radius: 0px 10px 0px 0px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	position: absolute;
@@ -64,10 +65,17 @@ const NewItemSave = styled.button`
 	top: 0%;
 	right: 0;
 	transform: translate(110%, 0%);
-	background-color: #6457bb;
 	padding: 5px;
 	&.active {
 		background-color: #de1f5f;
+		border: 1px solid #6457bb;
+	}
+	&:focus {
+		background-color: #5b5080;
+		border: 1px solid #382c74;
+	}
+	&:focus.active {
+		background-color: #cc143c;
 		border: 1px solid #8c0f39;
 	}
 `;
@@ -81,6 +89,7 @@ export const DnDNewItemComponent = memo(function DnDNewItemComponent({
 	const [name, setName] = useState('');
 	const [isShaking, setIsShaking] = useState(false);
 	const menuState = useSelector((state) => state.DnDSlice);
+	const inputRef = useRef(null);
 
 	const { t } = useTranslation('menuPage');
 
@@ -103,6 +112,8 @@ export const DnDNewItemComponent = memo(function DnDNewItemComponent({
 		if (defaultName.trim()) {
 			setName(defaultName);
 		}
+
+		inputRef.current.focus();
 	}, [defaultName]);
 
 	return (
@@ -113,6 +124,8 @@ export const DnDNewItemComponent = memo(function DnDNewItemComponent({
 					type="text"
 					id="addNewElement"
 					value={name}
+					ref={inputRef}
+					tabIndex="0"
 					onChange={(e) => setName(e.target.value)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') {
@@ -124,6 +137,7 @@ export const DnDNewItemComponent = memo(function DnDNewItemComponent({
 				<NewItemSave
 					type="button"
 					onClick={createNewItemHandle}
+					tabIndex="0"
 					className={menuState?.currentItem?.id === item?.id ? 'active' : ''}
 				>
 					<svg

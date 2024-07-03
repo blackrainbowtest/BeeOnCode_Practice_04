@@ -22,8 +22,11 @@ const ItemContent = styled.div`
 	padding: 6px;
 	border-radius: 0px 8px 8px 0px;
 	display: flex;
+	user-select: none;
+	opacity: ${(props) => (props.draggable ? '1' : '1')};
 	&.active {
 		background-color: #6457bb;
+		opacity: 1 !important;
 	}
 `;
 
@@ -47,13 +50,13 @@ function DnDElementContent({
 	item = {},
 	callback = {},
 	isOpen = false,
-	setShowChildren = {},
 	childCount = 0,
 	isEdit = false,
-	setIsEdit,
-	setIsAdd
+	draggable,
+	dragActions
 }) {
-	const { renameElement, addElement, deleteElement } = callback;
+	const { renameElement, addElement, deleteElement, setShowChildren, setIsEdit, setIsAdd } = callback;
+	const { dragStartHandle, dragLeaveHandle, dragEndHandle, dragOverHandle, dropHandle } = dragActions;
 	const menuState = useSelector((state) => state.DnDSlice);
 	const dispatch = useDispatch();
 
@@ -62,6 +65,10 @@ function DnDElementContent({
 		dispatch(changeCurrentItem(item));
 		setIsEdit(false);
 		setIsAdd(false);
+
+		if (menuState.data.filter((menu) => menu.parent === item.id).length > 0) {
+			setShowChildren((prev) => !prev);
+		}
 
 		const handleEscKey = (event) => {
 			if (event.key === 'Escape') {
@@ -77,6 +84,12 @@ function DnDElementContent({
 		<ItemContent
 			className={menuState?.currentItem?.id === item?.id ? 'active' : ''}
 			onClick={setCurrentItem}
+			draggable={draggable}
+			onDragStart={dragStartHandle}
+			onDragLeave={dragLeaveHandle}
+			onDragEnd={dragEndHandle}
+			onDragOver={dragOverHandle}
+			onDrop={dropHandle}
 		>
 			{childCount > 0 ? (
 				<DnDIconShow
