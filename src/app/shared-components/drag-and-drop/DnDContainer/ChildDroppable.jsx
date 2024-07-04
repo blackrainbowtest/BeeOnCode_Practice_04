@@ -9,6 +9,7 @@ const ChildsContainer = styled.div`
 	gap: 10px;
 	width: 400px;
 	margin-left: 30px;
+	background: inherit;
 `;
 
 export const ChildDroppable = memo(function ChildDroppable({ parent }) {

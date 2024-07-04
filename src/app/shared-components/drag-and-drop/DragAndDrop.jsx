@@ -1,7 +1,8 @@
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewData } from 'app/store/slices/DnDSlice';
-import styled from 'styled-components';
+import { useTheme } from '@mui/material/styles';
+import styled, { ThemeProvider } from 'styled-components';
 import { ParentDraggable } from './DnDContainer';
 import { DnDNewMenuButton } from './DnDAddNewElement/DnDNewMenuButton';
 import { DnDNewItemComponent } from './DnDAddNewElement/DnDNewItemComponent';
@@ -9,7 +10,7 @@ import { DnDNewItemComponent } from './DnDAddNewElement/DnDNewItemComponent';
 const NewMenuContainer = styled.div`
 	padding: 15px 0px;
 	transition: transform 0.5s ease-in-out;
-	background-color: inherit;
+	background: inherit;
 `;
 
 const MainParentContainer = styled.div`
@@ -17,9 +18,11 @@ const MainParentContainer = styled.div`
 	flex-direction: column;
 	gap: 10px;
 	width: 400px;
+	background: inherit;
 `;
 
-function DragAndDrop({ data }) {
+function DragAndDrop() {
+	const theme = useTheme();
 	const [isClicked, setIsClicked] = useState(false);
 	const dispatch = useDispatch();
 	const menuState = useSelector((state) => state.DnDSlice);
@@ -32,7 +35,7 @@ function DragAndDrop({ data }) {
 	};
 
 	return (
-		<div>
+		<ThemeProvider theme={theme}>
 			<NewMenuContainer>
 				<DnDNewMenuButton
 					isClicked={isClicked}
@@ -43,10 +46,10 @@ function DragAndDrop({ data }) {
 						setIsClicked={setIsClicked}
 						inputData={createNewMenu}
 					/>
-				) : undefined}
+				) : null}
 			</NewMenuContainer>
 			<MainParentContainer>
-				{data
+				{menuState.data
 					.slice()
 					.filter((item) => item.parent === null)
 					.sort((a, b) => a.order - b.order)
@@ -57,7 +60,7 @@ function DragAndDrop({ data }) {
 						/>
 					))}
 			</MainParentContainer>
-		</div>
+		</ThemeProvider>
 	);
 }
 

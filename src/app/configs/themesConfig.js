@@ -45,6 +45,12 @@ export const themesConfig = {
 				paper: '#FFFFFF',
 				default: '#f1f5f9'
 			},
+			border: {
+				light: '#6b7280'
+			},
+			shadow: {
+				light: '#0000001a'
+			},
 			error: {
 				light: '#ffcdd2',
 				main: '#f44336',
@@ -77,6 +83,12 @@ export const themesConfig = {
 			background: {
 				paper: '#1e293b',
 				default: '#111827'
+			},
+			border: {
+				light: '#94a3b8'
+			},
+			shadow: {
+				light: '#ffffff1a'
 			},
 			error: {
 				light: '#ffcdd2',

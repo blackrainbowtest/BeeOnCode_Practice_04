@@ -9,7 +9,6 @@ const ItemIcon = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: white;
 	padding: 5px;
 	font-size: 24px;
 `;

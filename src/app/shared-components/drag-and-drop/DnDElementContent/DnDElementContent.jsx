@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCurrentItem } from 'app/store/slices/DnDSlice';
-import styled, { keyframes } from 'styled-components';
+import { useTheme } from '@mui/material/styles';
+import styled, { ThemeProvider, keyframes } from 'styled-components';
 import DnDIconMain from './DnDIconMain';
 import DnDIconEdit from './DnDIconEdit';
 import DnDIconDelete from './DnDIconDelete';
@@ -22,29 +23,28 @@ const moveStripes = keyframes`
 `;
 
 const ItemContent = styled.div`
-	background-color: #de1f5f;
-	padding: 8px;
-	min-height: 40px;
-	min-width: 400px;
 	width: 400px;
+	min-width: 400px;
+	min-height: 40px;
 	padding: 6px;
+	border: 1px solid ${(props) => props.theme.palette.border.light};
 	border-radius: 0px 8px 8px 0px;
+	box-shadow: 0 4px 8px ${(props) => props.theme.palette.shadow.light};
 	display: flex;
 	user-select: none;
-	opacity: ${(props) => (props.draggable ? '1' : '1')};
+	background: inherit;
 	cursor: ${(props) => (props.draggable ? 'grab' : 'auto')};
 	&.active {
-		background-color: #6457bb;
-		opacity: 1 !important;
+		background: ${(props) => props.theme.palette.background.paper};
 	}
 	&.dragging {
 		background: linear-gradient(
 			45deg,
-			#6457bb 25%,
+			${(props) => props.theme.palette.background.paper} 25%,
 			transparent 25%,
 			transparent 50%,
-			#6457bb 50%,
-			#6457bb 75%,
+			${(props) => props.theme.palette.background.paper} 50%,
+			${(props) => props.theme.palette.background.paper} 75%,
 			transparent 75%,
 			transparent
 		);
@@ -55,7 +55,6 @@ const ItemContent = styled.div`
 
 const ItemTitle = styled.div`
 	width: 100%;
-	color: #ffffff;
 	padding: 0px 8px;
 	font-size: 16px;
 	display: flex;
@@ -70,11 +69,13 @@ const ItemEmpty = styled.div`
 `;
 
 function DnDElementContent({ item = {}, callback = {}, childCount = 0, dragBooleans, draggable, dragActions }) {
+	const theme = useTheme();
+	const dispatch = useDispatch();
+
+	const menuState = useSelector((state) => state.DnDSlice);
 	const { renameElement, addElement, deleteElement, setShowChildren, setIsEdit, setIsAdd } = callback;
 	const { dragStartHandle, dragLeaveHandle, dragEndHandle, dragOverHandle, dropHandle } = dragActions;
 	const { isEdit, showChildren, isAtCenter } = dragBooleans;
-	const menuState = useSelector((state) => state.DnDSlice);
-	const dispatch = useDispatch();
 
 	const setCurrentItem = (e) => {
 		e.stopPropagation();
@@ -97,44 +98,46 @@ function DnDElementContent({ item = {}, callback = {}, childCount = 0, dragBoole
 		document.addEventListener('keydown', handleEscKey);
 	};
 	return (
-		<ItemContent
-			className={`${menuState?.currentItem?.id === item?.id ? 'active' : ''} 
+		<ThemeProvider theme={theme}>
+			<ItemContent
+				className={`${menuState?.currentItem?.id === item?.id ? 'active' : ''} 
 			${menuState?.draggedItem?.id === item.id && isAtCenter ? 'dragging' : ''}`}
-			onClick={setCurrentItem}
-			draggable={draggable}
-			onDragStart={dragStartHandle}
-			onDragLeave={dragLeaveHandle}
-			onDragEnd={dragEndHandle}
-			onDragOver={dragOverHandle}
-			onDrop={dropHandle}
-		>
-			{childCount > 0 ? (
-				<DnDIconShow
-					isOpen={showChildren}
-					callback={setShowChildren}
-					childCount={childCount}
-					item={item}
-				/>
-			) : (
-				<ItemEmpty />
-			)}
-			<DnDIconMain />
-			<ItemTitle>
-				{isEdit && menuState?.currentItem?.id === item.id ? (
-					<DnDEditItemComponent
+				onClick={setCurrentItem}
+				draggable={draggable}
+				onDragStart={dragStartHandle}
+				onDragLeave={dragLeaveHandle}
+				onDragEnd={dragEndHandle}
+				onDragOver={dragOverHandle}
+				onDrop={dropHandle}
+			>
+				{childCount > 0 ? (
+					<DnDIconShow
+						isOpen={showChildren}
+						callback={setShowChildren}
+						childCount={childCount}
 						item={item}
-						setIsClicked={setIsEdit}
 					/>
 				) : (
-					item?.name
+					<ItemEmpty />
 				)}
-			</ItemTitle>
-			{isEdit && menuState?.currentItem?.id === item.id ? null : (
-				<DnDIconEdit callback={(e) => renameElement(e, item)} />
-			)}
-			<DnDIconAdd callback={(e) => addElement(e, item)} />
-			<DnDIconDelete callback={() => deleteElement(item)} />
-		</ItemContent>
+				<DnDIconMain />
+				<ItemTitle>
+					{isEdit && menuState?.currentItem?.id === item.id ? (
+						<DnDEditItemComponent
+							item={item}
+							setIsClicked={setIsEdit}
+						/>
+					) : (
+						item?.name
+					)}
+				</ItemTitle>
+				{isEdit && menuState?.currentItem?.id === item.id ? null : (
+					<DnDIconEdit callback={(e) => renameElement(e, item)} />
+				)}
+				<DnDIconAdd callback={(e) => addElement(e, item)} />
+				<DnDIconDelete callback={() => deleteElement(item)} />
+			</ItemContent>
+		</ThemeProvider>
 	);
 }
 

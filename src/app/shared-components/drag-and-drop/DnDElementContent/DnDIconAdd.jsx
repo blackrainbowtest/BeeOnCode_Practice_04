@@ -12,13 +12,12 @@ const ItemIcon = styled.div`
 	justify-content: center;
 	border-radius: 5px;
 	align-items: center;
-	color: white;
 	padding: 5px;
 	font-size: 24px;
 	cursor: pointer;
 
 	&:hover {
-		background-color: #8c0f39;
+		background: ${(props) => props.theme.palette.background.paper};
 	}
 `;
 

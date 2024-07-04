@@ -26,7 +26,7 @@ function Menu() {
 			}
 			content={
 				<div className="p-24">
-					<h4>Content2</h4>
+					<h4>{t('MENU')}</h4>
 					<br />
 					<MenuContent />
 				</div>

@@ -13,18 +13,18 @@ const ItemIcon = styled.div`
 	justify-content: center;
 	border-radius: 5px;
 	align-items: center;
-	color: white;
 	font-size: 24px;
 	cursor: pointer;
 
 	&:hover {
-		background-color: #8c0f39;
+		background: ${(props) => props.theme.palette.background.paper};
 	}
 `;
 
 const ItemChildCount = styled.div`
 	position: absolute;
-	background-color: #6457bb;
+	background: ${(props) => props.theme.palette.secondary.main};
+	color: ${(props) => props.theme.palette.secondary.contrastText};
 	border-radius: 50%;
 	top: -2px;
 	left: 0px;
@@ -37,7 +37,7 @@ const ItemChildCount = styled.div`
 	letter-spacing: 0;
 
 	&.active {
-		background-color: #de1f5f;
+		background: ${(props) => props.theme.palette.secondary.light};
 	}
 `;
 
