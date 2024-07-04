@@ -187,7 +187,7 @@ export function isNearCenter(elementRect, cursorPositionY) {
 	/**
 	 * Threshold for determining "close to the center"
 	 */
-	const middleThreshold = 0.25;
+	const middleThreshold = 0.15;
 	const elementTop = elementRect.top;
 	const elementBottom = elementRect.bottom;
 
