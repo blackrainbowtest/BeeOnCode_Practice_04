@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCurrentItem, changeDraggedItem, deleteData, updateData } from 'app/store/slices/DnDSlice';
 import DnDElementContent from '../DnDElementContent';
@@ -14,6 +14,10 @@ export const ParentDraggable = memo(function ParentDraggable({ item }) {
 	const [isAtCenter, setIsAtCenter] = useState(false);
 	const menuState = useSelector((state) => state.DnDSlice);
 	const menuChildCount = menuState.data.filter((menu) => menu.parent === item.id).length;
+
+	const haveChildren = useMemo(() => {
+		return menuState.data.some((menu) => menu.parent === item.id);
+	}, [menuState.data, item.id]);
 
 	/**
 	 * DnD actions
@@ -70,6 +74,7 @@ export const ParentDraggable = memo(function ParentDraggable({ item }) {
 
 	const dragLeaveHandle = useCallback((e) => {
 		e.stopPropagation();
+		setIsAtCenter(false);
 	}, []);
 
 	const dragEndHandle = useCallback((e) => {
@@ -138,10 +143,9 @@ export const ParentDraggable = memo(function ParentDraggable({ item }) {
 		<>
 			<DnDElementContent
 				item={item}
-				isOpen={showChildren}
 				childCount={menuChildCount}
 				callback={{ renameElement, addElement, deleteElement, setShowChildren, setIsEdit, setIsAdd }}
-				isEdit={isEdit}
+				dragBooleans={{ isEdit, showChildren, isAtCenter }}
 				draggable={!isAdd && !isEdit}
 				dragActions={{ dragStartHandle, dragLeaveHandle, dragEndHandle, dragOverHandle, dropHandle }}
 			/>
@@ -151,7 +155,7 @@ export const ParentDraggable = memo(function ParentDraggable({ item }) {
 					item={item}
 				/>
 			) : null}
-			{showChildren ? <ChildDroppable parent={item} /> : null}
+			{showChildren && haveChildren ? <ChildDroppable parent={item} /> : null}
 		</>
 	);
 });

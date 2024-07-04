@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCurrentItem } from 'app/store/slices/DnDSlice';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import DnDIconMain from './DnDIconMain';
 import DnDIconEdit from './DnDIconEdit';
 import DnDIconDelete from './DnDIconDelete';
@@ -12,6 +12,14 @@ import { DnDEditItemComponent } from '../DnDEditItemComponent/DnDEditItemCompone
 /**
  * Styled component for draggable item (Perhaps in the future we will add dynamic style changes)
  */
+const moveStripes = keyframes`
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 40px 0px;
+	}
+`;
 
 const ItemContent = styled.div`
 	background-color: #de1f5f;
@@ -24,9 +32,24 @@ const ItemContent = styled.div`
 	display: flex;
 	user-select: none;
 	opacity: ${(props) => (props.draggable ? '1' : '1')};
+	cursor: ${(props) => (props.draggable ? 'grab' : 'auto')};
 	&.active {
 		background-color: #6457bb;
 		opacity: 1 !important;
+	}
+	&.dragging {
+		background: linear-gradient(
+			45deg,
+			#6457bb 25%,
+			transparent 25%,
+			transparent 50%,
+			#6457bb 50%,
+			#6457bb 75%,
+			transparent 75%,
+			transparent
+		);
+		background-size: 20px 20px;
+		animation: ${moveStripes} 1s linear infinite;
 	}
 `;
 
@@ -46,17 +69,10 @@ const ItemEmpty = styled.div`
 	min-width: 34px;
 `;
 
-function DnDElementContent({
-	item = {},
-	callback = {},
-	isOpen = false,
-	childCount = 0,
-	isEdit = false,
-	draggable,
-	dragActions
-}) {
+function DnDElementContent({ item = {}, callback = {}, childCount = 0, dragBooleans, draggable, dragActions }) {
 	const { renameElement, addElement, deleteElement, setShowChildren, setIsEdit, setIsAdd } = callback;
 	const { dragStartHandle, dragLeaveHandle, dragEndHandle, dragOverHandle, dropHandle } = dragActions;
+	const { isEdit, showChildren, isAtCenter } = dragBooleans;
 	const menuState = useSelector((state) => state.DnDSlice);
 	const dispatch = useDispatch();
 
@@ -82,7 +98,8 @@ function DnDElementContent({
 	};
 	return (
 		<ItemContent
-			className={menuState?.currentItem?.id === item?.id ? 'active' : ''}
+			className={`${menuState?.currentItem?.id === item?.id ? 'active' : ''} 
+			${menuState?.draggedItem?.id === item.id && isAtCenter ? 'dragging' : ''}`}
 			onClick={setCurrentItem}
 			draggable={draggable}
 			onDragStart={dragStartHandle}
@@ -93,7 +110,7 @@ function DnDElementContent({
 		>
 			{childCount > 0 ? (
 				<DnDIconShow
-					isOpen={isOpen}
+					isOpen={showChildren}
 					callback={setShowChildren}
 					childCount={childCount}
 					item={item}

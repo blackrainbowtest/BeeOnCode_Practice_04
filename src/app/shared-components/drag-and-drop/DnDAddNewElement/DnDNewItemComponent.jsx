@@ -70,11 +70,13 @@ const NewItemSave = styled.button`
 		background-color: #de1f5f;
 		border: 1px solid #6457bb;
 	}
-	&:focus {
+	&:focus,
+	&:hover {
 		background-color: #5b5080;
 		border: 1px solid #382c74;
 	}
-	&:focus.active {
+	&:focus.active,
+	&:hover.active {
 		background-color: #cc143c;
 		border: 1px solid #8c0f39;
 	}
